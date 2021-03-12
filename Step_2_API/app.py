@@ -86,9 +86,17 @@ def stations():
     session.close()
 
 #     # Convert list of tuples into normal list
-    all_stations = list(np.ravel(results))
+    #all_stations = list(np.ravel(results))
+ 
+    station_list = []
+    for station, name in results:
+        station_list_dict = {}
+        station_list_dict["station"] = station
+        station_list_dict["name"] = name
+        station_list.append(station_list_dict)
 
-    return jsonify(all_stations)
+    
+    return jsonify(station_list)
 #   
 
 #### query date and temp obverstaions of most active station for the last year of data- return a JASON list of temp obvs (TOBS) for previous year
@@ -96,11 +104,14 @@ def stations():
 
 
 def tobs():
+
+
     year_ago = dt.date(2017,8,23) - dt.timedelta(days=365)
 # #     # Create our session (link) from Python to the DB
     session = Session(engine)
 # #     # Query all stations and precips
- 
+
+    
 
     results= session.query(Measurement.date, Measurement.tobs).filter(Measurement.date >=year_ago).filter(Measurement.station =="USC00519281").all()
 
